@@ -16,19 +16,27 @@ connections_pool = []
 
 class Engine:
     def __init__(
-        self, connection_properties: dict = {}, connection_string: str = ""
+        self, connection_info: dict | str
     ) -> None:
-        self.infer_engine_kind(connection_properties, connection_string)
+        self.infer_engine_kind(connection_info)
 
-    def infer_engine_kind(self, connection_properties, connection_string):
-        self.kind = self.get_database_kind(connection_properties, connection_string)
+    def infer_engine_kind(self, connection_info):
+        self.kind = self.get_database_kind(connection_info)
         match self.kind:
             case EngineKind.POSTGRESQL:
-                self.connection_properties = connection_properties
-                self.connection = psycopg2.connect(**self.connection_properties)
+                self.connection_info = connection_info
+                self.connection = psycopg2.connect(**self.connection_info)
+            case EngineKind.MSSQL:
+                raise NotImplementedError()
+            case EngineKind.SQLLITE:
+                raise NotImplementedError()
 
-    def get_database_kind(self, connection_properties, connection_string):
-        return EngineKind.POSTGRESQL
+    def get_database_kind(self, connection_info: dict | str):
+        if isinstance(connection_info, dict):
+            return EngineKind.POSTGRESQL
+        if connection_info.startswith("Driver"):
+            return EngineKind.MSSQL
+        return EngineKind.SQLLITE
 
 
 class DatabaseSession:
@@ -37,12 +45,12 @@ class DatabaseSession:
         self.autocommit = autocommit
 
 
-def create_engine(connection_properties: dict = {}, connection_string: str = ""):
-    if len(connection_string) > 0:
-        return Engine(connection_string)
-    if connection_properties:
-        return Engine(connection_properties)
-    raise ValueError("No connection info provided.")
+def create_engine(connection_info: dict | str):
+    valid_format = type(connection_info) in (dict, str)
+    if not connection_info or not valid_format:
+        raise ValueError("No connection info provided.")
+    return Engine(connection_info)
+    
 
 
 def dbsession(engine, autocommit) -> list[DatabaseSession]:
