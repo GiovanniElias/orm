@@ -1,34 +1,14 @@
-from typing import Optional
-from pydantic import BaseModel, ValidationError
+def get_postgresql_connection_info(*args, **kwargs) -> dict:
+    if not kwargs.keys().isdisjoint({"host", "database", "user", "password"}):
+        info = dict(
+            host=kwargs.get("host"),
+            database=kwargs.get("database"),
+            user=kwargs.get("user"),
+            password=kwargs.get("password"),
+        )
+        if "port" not in kwargs.keys():
+            return info
+        info["port"] = kwargs.get("port")
+        return info
 
-class PostgresqlConnectionInfo(BaseModel):
-    host: str
-    database: str
-    user: str
-    password: str
-    port: Optional[str]
-
-def get_postgresql_connection_info(*args, **kwargs):
-    try:
-        if 
-        info = PostgresqlConnectionInfo(**kwargs)
-    except ValidationError:
-        pass
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+    raise AttributeError("Invalid connection properties.")
