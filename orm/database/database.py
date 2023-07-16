@@ -21,7 +21,7 @@ class Engine:
         self.infer_engine_kind(connection_info)
 
     def infer_engine_kind(self, connection_info):
-        self.kind = self.get_database_kind(connection_info)
+        self.kind = self._get_database_kind(connection_info)
         match self.kind:
             case EngineKind.POSTGRESQL:
                 self.connection_info = connection_info
@@ -31,7 +31,7 @@ class Engine:
             case EngineKind.SQLLITE:
                 raise NotImplementedError()
 
-    def get_database_kind(self, connection_info: dict | str):
+    def _get_database_kind(self, connection_info: dict | str):
         if isinstance(connection_info, dict):
             return EngineKind.POSTGRESQL
         if connection_info.startswith("Driver"):
@@ -53,7 +53,9 @@ def create_engine(connection_info: dict | str):
     
 
 
-def dbsession(engine, autocommit) -> list[DatabaseSession]:
-    connections_pool.append(DatabaseSession(engine, autocommit))
-    connections_pool = iter(connections_pool)
-    yield next(connections_pool)
+def dbsession(engine, autocommit) -> DatabaseSession:
+    #TODO: ADD POOL LOGIC, EVEN IF BASIC
+    engine_is_valid = True
+    if not engine_is_valid:
+        raise ConnectionError("Engine is not valid.")
+    return DatabaseSession(engine, autocommit)
