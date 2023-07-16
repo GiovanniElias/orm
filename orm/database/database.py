@@ -1,4 +1,7 @@
-from enum import Enum, auto
+from __future__ import annotations
+
+from enum import auto
+from enum import Enum
 
 import psycopg2
 
@@ -34,28 +37,36 @@ class Engine:
     def _get_database_kind(self, connection_info: dict | str):
         if isinstance(connection_info, dict):
             return EngineKind.POSTGRESQL
-        if connection_info.startswith("Driver"):
+        if connection_info.startswith('Driver'):
             return EngineKind.MSSQL
         return EngineKind.SQLLITE
 
 
 class DatabaseSession:
+    def __init__(self, database) -> None:
+        self.database = database
+
+
+class Database:
     def __init__(self, engine, autocommit) -> None:
         self.engine = engine
         self.autocommit = autocommit
+        self.tables = []
+        # TODO: GET DB NAME. MIGHT HAVE TO CREATE DIFFERENT KINDS OF ENGINES.
+        self.name = ''
 
 
 def create_engine(connection_info: dict | str):
     valid_format = type(connection_info) in (dict, str)
     if not connection_info or not valid_format:
-        raise ValueError("No connection info provided.")
+        raise ValueError('No connection info provided.')
     return Engine(connection_info)
-    
 
 
 def dbsession(engine, autocommit) -> DatabaseSession:
-    #TODO: ADD POOL LOGIC, EVEN IF BASIC
+    # TODO: ADD POOL LOGIC, EVEN IF BASIC
     engine_is_valid = True
     if not engine_is_valid:
-        raise ConnectionError("Engine is not valid.")
-    return DatabaseSession(engine, autocommit)
+        raise ConnectionError('Engine is not valid.')
+    database = Database(engine, autocommit)
+    return DatabaseSession(database)
