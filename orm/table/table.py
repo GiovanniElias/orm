@@ -13,19 +13,43 @@ class Table:
     __table_name__: str
 
     def __init_subclass__(cls, **kwargs) -> None:
+        cls.attrs = dict(getmembers(cls)).items()
         cls.kwargs = kwargs
+        cls._assign_table_name()
+        cls._assign_column_names()
+        cls._validate_column_names()
+
+    @classmethod
+    def _assign_table_name(cls):
         if getattr(cls, '__table_name__', False):
             return
         cls.__table_name__ = f'{cls.__name__.lower()}s'
 
     @classmethod
-    def get_columns(self) -> list:
+    def _assign_column_names(cls):
+        for name, field in cls.attrs:
+            if isinstance(field, Column) and field.name is None:
+                field.name = name
+
+    @classmethod
+    def get_columns(cls) -> list:
         cols = []
-        attrs = dict(getmembers(self)).items()
-        for name, field in attrs:
+        for name, field in cls.attrs:
             if isinstance(field, Column):
-                cols.append({'name': name, 'type': type(field.type)})
+                cols.append({'name': field.name, 'type': type(field.type)})
         return cols
+
+    @classmethod
+    def _validate_column_names(cls):
+        # TODO: REPLACE NAIVE IMPLEMENTATION
+        cols = cls.get_columns()
+        names = []
+        for col in cols:
+            name = col.get('name')
+            if name not in names:
+                names.append(name)
+            else:
+                raise NameError('No two columns should share names.')
 
 
 def table_base():
