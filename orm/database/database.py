@@ -18,9 +18,7 @@ connections_pool = []
 
 
 class Engine:
-    def __init__(
-        self, connection_info: dict | str
-    ) -> None:
+    def __init__(self, connection_info: dict | str) -> None:
         self.infer_engine_kind(connection_info)
 
     def infer_engine_kind(self, connection_info):

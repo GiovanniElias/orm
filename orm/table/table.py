@@ -9,7 +9,6 @@ from orm.orm import Column
 
 
 class Table:
-
     __table_name__: str
 
     def __init_subclass__(cls, **kwargs) -> None:
@@ -33,11 +32,7 @@ class Table:
 
     @classmethod
     def get_columns(cls) -> list:
-        cols = []
-        for name, field in cls.attrs:
-            if isinstance(field, Column):
-                cols.append({'name': field.name, 'type': type(field.type)})
-        return cols
+        return [field for name, field in cls.attrs if isinstance(field, Column)]
 
     @classmethod
     def _validate_column_names(cls):
@@ -45,7 +40,7 @@ class Table:
         cols = cls.get_columns()
         names = []
         for col in cols:
-            name = col.get('name')
+            name = col.name
             if name not in names:
                 names.append(name)
             else:
