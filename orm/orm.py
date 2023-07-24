@@ -10,6 +10,19 @@ from pydantic import BaseModel
 from pydantic import field_validator
 
 
+def translate_to_dialect(func):
+    dialect = 'postgres'
+
+    def wrapped_stmt_get_func(self, value, operator):
+        if dialect == 'postgres':
+            if isinstance(value, (str, date, datetime)):
+                value = f"'{value}'"
+            if value is None:
+                value = 'NULL'
+            return func(self, value, operator)
+    return wrapped_stmt_get_func
+
+
 class ColumnType(BaseModel):
     _python_type: Any
     _alias: str
@@ -22,7 +35,7 @@ class Column(BaseModel):
     nullable: bool = field(default=True)
     default: Any = field(default=None)
 
-    def __repr__(self) -> str:
+    def __str__(self) -> str:
         base = f'{self.name} {self.type._alias}'
         if self.primary_key:
             base += f' PRIMARY KEY'
@@ -32,9 +45,10 @@ class Column(BaseModel):
             base += f' DEFAULT {self.default}'
         return base.rstrip()
 
+    @translate_to_dialect
     def comparison(self, value: object, operator: str):
-        if isinstance(value, (str, date, datetime)):
-            return f"{self.name} {operator} '{value}'"
+        if isinstance(value, Column):
+            return super().__eq__(value)
         return f'{self.name} {operator} {value}'
 
     def __eq__(self, value: object) -> str:
