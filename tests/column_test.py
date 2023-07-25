@@ -6,11 +6,16 @@ from orm.types import Integer
 
 def test_column_string_stresentation():
     col_pk = Column(
-        name='test', type=Integer(),
-        nullable=False, primary_key=True,
+        name='test',
+        type=Integer(),
+        nullable=False,
+        primary_key=True,
     )
     col_not_null = Column(
-        name='test', type=Integer(), nullable=False, primary_key=False,
+        name='test',
+        type=Integer(),
+        nullable=False,
+        primary_key=False,
     )
     col_with_default = Column(
         name='test',

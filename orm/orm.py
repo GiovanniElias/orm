@@ -20,6 +20,7 @@ def translate_to_dialect(func):
             if value is None:
                 value = 'NULL'
             return func(self, value, operator)
+
     return wrapped_stmt_get_func
 
 

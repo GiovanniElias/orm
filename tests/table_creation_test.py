@@ -15,15 +15,20 @@ def test_table_base_object_creation():
     class User(Base):
         id = Column(type=Integer(), name='id')
         test = Column(
-            type=String(), name='test', default='test_default', primary_key=True,
+            type=String(),
+            name='test',
+            default='test_default',
+            primary_key=True,
         )
 
     expected_table_name = 'users'
     expected_columns = [
         Column(type=Integer(), name='id'),
         Column(
-            type=String(), name='test',
-            default='test_default', primary_key=True,
+            type=String(),
+            name='test',
+            default='test_default',
+            primary_key=True,
         ),
     ]
 
@@ -63,7 +68,10 @@ def test_table_attr_is_column():
     class User(Base):
         id = Column(type=Integer(), name='id')
         test = Column(
-            type=String(), name='test', default='test_default', primary_key=True,
+            type=String(),
+            name='test',
+            default='test_default',
+            primary_key=True,
         )
 
     assert isinstance(User.id, Column)

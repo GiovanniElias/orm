@@ -13,7 +13,7 @@ class Integer(ColumnType):
 
 class String(ColumnType):
     _python_type = str
-    _alias = 'VARCHAR(MAX)'
+    _alias = 'VARCHAR(255)'
 
 
 class Date(ColumnType):
