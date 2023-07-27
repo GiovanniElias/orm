@@ -3,3 +3,6 @@
 
 # Cython binary
 *.pyc
+
+# Poetry
+poetry.lock
