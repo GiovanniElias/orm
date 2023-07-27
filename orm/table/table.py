@@ -36,15 +36,10 @@ class Table:
 
     @classmethod
     def _validate_column_names(cls):
-        # TODO: REPLACE NAIVE IMPLEMENTATION
         cols = cls.get_columns()
-        names = []
-        for col in cols:
-            name = col.name
-            if name not in names:
-                names.append(name)
-            else:
-                raise NameError('No two columns should share names.')
+        names = [col.name for col in cols]
+        if len(names) > len(set(names)):
+            raise NameError('No two columns should share names.')
 
 
 def table_base():

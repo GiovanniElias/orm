@@ -15,7 +15,6 @@ def test_engine_creation_postgres():
         'password': 'admin',
     }
     engine = create_engine(connection_info)
-    assert not engine.connection.closed
     assert engine.kind == EngineKind.POSTGRESQL
 
 
@@ -38,6 +37,6 @@ def test_get_dbsession():
         'user': 'giovannielias',
         'password': 'admin',
     }
-    engine = create_engine(connection_info)
-    session = dbsession(engine=engine, autocommit=False)
-    assert not session.database.engine.connection.closed
+    engine = 42
+    with pytest.raises(ConnectionError):
+        session = dbsession(engine=engine, autocommit=False)

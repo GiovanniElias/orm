@@ -165,8 +165,7 @@ def create_engine(connection_info: dict | str):
 
 
 def dbsession(engine, autocommit) -> DatabaseSession:
-    # TODO: ADD POOL LOGIC, EVEN IF BASIC
-    engine_is_valid = True
+    engine_is_valid = isinstance(engine, Engine)
     if not engine_is_valid:
         raise ConnectionError('Engine is not valid.')
     database = Database(engine, autocommit)

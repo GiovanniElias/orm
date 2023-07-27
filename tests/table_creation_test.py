@@ -76,3 +76,21 @@ def test_table_attr_is_column():
 
     assert isinstance(User.id, Column)
     assert isinstance(User.test, Column)
+
+
+def test_table_name_assigned():
+    class User(Base):
+        __table_name__ = 'test'
+        id = Column(type=Integer(), name='id')
+        test = Column(
+            type=String(),
+            name='test',
+            default='test_default',
+            primary_key=True,
+        )
+
+    expected_table_name = 'test'
+
+    table_name = User.__dict__['__table_name__']
+
+    assert table_name == expected_table_name

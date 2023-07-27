@@ -21,7 +21,7 @@ def test_create_stmt_creation():
             primary_key=True,
         ),
     ]
-    expected_stmt = 'CREATE TABLE [IF NOT EXISTS] test (id INT, test VARCHAR(MAX) PRIMARY KEY DEFAULT test_default);'
+    expected_stmt = 'CREATE TABLE IF NOT EXISTS test (id INT, test VARCHAR(255) PRIMARY KEY DEFAULT test_default);'
     stmt = get_create_stmt(
         table_name=test_table_name,
         column_definitions=column_definitions,
