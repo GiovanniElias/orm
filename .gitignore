@@ -6,3 +6,7 @@
 
 # Poetry
 poetry.lock
+
+# config
+
+.env
