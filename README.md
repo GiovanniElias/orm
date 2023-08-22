@@ -1,8 +1,8 @@
 # What - A simple orm
----
 
-Il progetto ha lo scopo di implementare le funzionalità base per l'interazione con un database, in maniera intuitiva.
-L'utilizzo nel codice è simile a orm popolari, come sqlalchemy.
+
+The project aims to implement basic functionalities for interacting with a database in an intuitive manner. The usage in the code is similar to popular ORMs, such as SQLAlchemy.
+
 
 ### A couple of examples:
 
@@ -66,22 +66,23 @@ Statements:
 My choice to develop a Python ORM aimed to bridge the gap between object-oriented programming and databases; in the perspective of learning by doing, developing this project provided a hands-on understanding of how data is stored and retrieved, deepening comprehension of object-oriented principles and class design.
 
 # How - under the hood
+```mermaid
+    sequenceDiagram
+        participant User
+        participant Database
+        participant Table
+        participant Engine
+        participant QueryBuilder
+        participant ActualDatabase
 
-sequenceDiagram
-    participant User
-    participant Database
-    participant Table
-    participant Engine
-    participant QueryBuilder
-    participant ActualDatabase
+        User ->> Table: Create Table
 
-    User ->> Table: Create Table
-
-    User ->> Database: Execute Operation
-    Database ->> Engine: Execute Operation
-    Engine ->> QueryBuilder: Prepare Statement
-    QueryBuilder ->> Engine: Statement
-    Engine ->> ActualDatabase: Execute Statement
-    ActualDatabase -->> Engine: Result
-    Engine -->> Database: Result
-    Database -->> User: Result
+        User ->> Database: Execute Operation
+        Database ->> Engine: Execute Operation
+        Engine ->> QueryBuilder: Prepare Statement
+        QueryBuilder ->> Engine: Statement
+        Engine ->> ActualDatabase: Execute Statement
+        ActualDatabase -->> Engine: Result
+        Engine -->> Database: Result
+        Database -->> User: Result
+```
